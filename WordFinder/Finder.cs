@@ -5,6 +5,10 @@ namespace WordFinder
 {
     public static class Finder
     {
+        /// <summary>
+        /// Create a dictionnary of every letter and the words that begin with that letter as well as putting each word in upper-case
+        public static Dictionary<char, string[]> Index(IEnumerable<string> words) => "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToDictionary(l => l, l => words.Where(w => char.ToUpper(w[0]) == l).Select(w => w.ToUpper()).ToArray());
+
         public static IEnumerable<string> Find(string sample, string[] words)
         {
             if (string.IsNullOrEmpty(sample) || words is null || words.Length == 0)
@@ -12,12 +16,11 @@ namespace WordFinder
 
             sample = sample.ToUpper();
 
-            // Create a dictionnary of every letter and the words that begin with that letter as well as putting each word in upper-case
-            Dictionary<char, string[]> dict = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToDictionary(l => l, l => words.Where(w => char.ToUpper(w[0]) == l).Select(w => w.ToUpper()).ToArray());
+            var index = Index(words);
 
             for (int i = 0; i < sample.Length; i++)
             {
-                string[] potentialWords = dict[sample[i]];
+                string[] potentialWords = index[sample[i]];
 
                 if (potentialWords.Length == 0)
                     continue;
@@ -57,5 +60,10 @@ namespace WordFinder
                 }
             }
         }
+        public static IEnumerable<string> Hex(IEnumerable<string> words) => from word in words
+                                                                            where word.Length == 4
+                                                                            let upper = word.ToUpper()
+                                                                            where upper.All(l => l is 'O' or 'I' or >= 'A' and <= 'F')
+                                                                            select $"0x{upper.Replace('O', '0').Replace('I', '1')}";
     }
 }

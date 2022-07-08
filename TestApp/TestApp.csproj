@@ -9,4 +9,10 @@
     <ProjectReference Include="..\WordFinder\WordFinder.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="words.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
